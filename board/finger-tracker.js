@@ -98,7 +98,6 @@ board.on("ready", function() {
 		    		strip.pixel(i).color('green')
 		    	}
 		    	strip.show()
-		    	console.log('go');
 		    }
         });
         //sleep(1000);
