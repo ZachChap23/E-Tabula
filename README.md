@@ -1,2 +1,4 @@
 # E-Tabula
-Chess Board
+Digital Chess Board
+Made with Node.js and Arduino
+Constructed with 64 Neopixels and 64 photoresistors
