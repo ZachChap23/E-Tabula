@@ -92,10 +92,10 @@ board.on("ready", function() {
 		    	}
 		    for(i=0; i < 63; i++) {
 		    	if(state[i]==0) {
-		    		strip.pixel(i).color('white')
+		    		strip.pixel(i).color('#00FF00') //green
 		    	}
 		    	else if(state[i]==1){
-		    		strip.pixel(i).color('green')
+		    		strip.pixel(i).color('#FF0000') //red
 		    	}
 		    	strip.show()
 		    }
