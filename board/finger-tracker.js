@@ -3,16 +3,17 @@ var pixel = require("node-pixel");
 var five = require("johnny-five");
 var Chess = require('./chess').Chess;
 var SerialPort = require("serialport");
-
+var delay = 250;
 var data = []
 var newdata = []
 
 var board = new five.Board({port: "COM11"});
 var port;
 var base = []
-for(i=0; i < 64; i++) {base[i] = 180}
+for(i=0; i < 64; i++) {base[i] = 250}
 var state = []
 for(i=0; i < 64; i++) {state[i] = 0}
+var print = []
 var colour;
 var count = 0;
 var coord = 
@@ -37,7 +38,7 @@ board.on("ready", function() {
 
   strip.on("ready", function() {
     console.log("working");
-    strip.color('#000000')
+    strip.color('#0A0000')
     strip.show();
     console.log("strip is now", strip)
 
@@ -46,56 +47,65 @@ board.on("ready", function() {
     port.on('open', function(){
     	console.log('Serial Port Opened');
       	port.on('data', function(datain){
-	        console.log(datain);
+	        //console.log(datain);
 	        data = datain.toString().split(" ")
 	        for (i=0; i<64; i++) {
+	        	//console.log(i + ': ' + data[i]);
 	        	if (count == 0) {
-	        		console.log('base');
-	          		base[i] = Number(data[i]);
-	          		count = 1;
+	        		//console.log('base');
+	          		base[i] = Number(data[i])-1;
 	        	} 
 	        	else {
 	        		newdata[i] = Number(data[i]);
-	        		console.log('new');
+	        		//console.log('new');
 	        	}
-	        	console.log(base[i]);
-	        	console.log(newdata[i]);
+	        	if (count == 0 && i == 63) { count = 1;}
+	        	//console.log(base[i]);
+	        	//console.log(newdata[i]);
 		        colour = randcolor();
 		        //console.log(colour);
 		    	if(state[i] == 0) {
-		        	if (newdata[i] < base[i]*0.95) {
-			          	sleep(500)
-			          	if (newdata[i] < base[i]*0.95) {
+		        	if (newdata[i] < base[i]) {
+			          	sleep(delay)
+			          	if (newdata[i] < base[i]) {
 			          		state[i] = 1;
-			          		count = 0;
-			          		//strip.pixel(i).color('#000000');
+			          		//count = 0;
+			          		//strip.pixel(i).color('#990000');
 			          		//console.log(i.toString()+' off~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 			          		//strip.show()
 			          	}
 		          	}
 		        }
 			    else if(state[i] == 1) {
-			        if (newdata[i] > base[i]*0.95) {
-		          		sleep(500);
-			          	if (newdata[i] > base[i]*0.95) {
+			        if (newdata[i] > base[i]) {
+		          		sleep(delay);
+			          	if (newdata[i] > base[i]) {
 			          		state[i] = 0;
-			          		count = 0;
-			          		//strip.pixel(i).color('white')
+			          		//count = 0;
+			          		//strip.pixel(i).color('#000099')
 			          		//console.log(i.toString()+' on----------------------------------------------------------------------');
 			          		//strip.show();
 			          	}
 			        }
 		    	}
 			}
-			for(x=0; x < 63; x = x+8) {
-		    		console.log('-------'+state[x].toString()+state[x+1].toString()+state[x+2].toString()+state[x+3].toString()+state[x+4].toString()+state[x+5].toString()+state[x+6].toString()+state[x+7].toString())
+			for(i=0; i < 64; i++) {
+		    		print[i] = state[coord[i]]
 		    	}
-		    for(i=0; i < 63; i++) {
+			console.log();
+			for(x=0; x < 64; x = x+8) {
+		    		print[i]
+		    		console.log('-------'+print[x].toString()+' '+print[x+1].toString()+' '+print[x+2].toString()+' '+print[x+3].toString()+' '+print[x+4].toString()+' '+print[x+5].toString()+' '+print[x+6].toString()+' '+print[x+7].toString())
+		    	}
+		    console.log();
+		    for(i=0; i < 64; i++) {
 		    	if(state[i]==0) {
-		    		strip.pixel(i).color('#00FF00') //green
+		    		strip.pixel(i).color('#009900') //green = clear
+		    		//console.log(i + "CLEAR")
 		    	}
-		    	else if(state[i]==1){
-		    		strip.pixel(i).color('#FF0000') //red
+		    	if(state[i]==1){
+		    		strip.pixel(i).color('#990000') //red = something on
+		    		//console.log(i + "BLOCKED");
 		    	}
 		    	strip.show()
 		    }
