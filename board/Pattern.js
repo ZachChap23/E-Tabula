@@ -27,14 +27,14 @@ board.on("ready", function() {
     strips: [ {pin: 6, length: 64}, ],
     gamma: 2.8,
   });
-  for(i=0;i<8;i++){
+  for(i=0;i<16;i++){
     colours[i] = randcolor();
     console.log(colours[i])
     }
   strip.on("ready", function() {
     strip.color('white');
     strip.show()
-    sleep(100);
+    sleep(10);
     while(1) {
       halfcycle.apply(this, colours);
     }
@@ -85,10 +85,11 @@ function halfcycle() {
           strip.pixel(i+32).color(arguments[x+(arguments.length/2)]);
           strip.show();
           console.log(i);
-          sleep(50);
+          sleep(10);
       }
     }
 }
+
 function randcolor() {
   colour = '#'+(Math.floor((Math.random() * 0xFFFFFF)).toString(16)).toUpperCase();
   while(colour.length < 7) {
